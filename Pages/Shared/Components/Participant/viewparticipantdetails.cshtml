@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CompassMeetingApp.Models.Participant>
+
+<style>
+
+    .container-top {
+        display: flex;
+    }
+
+        .container-top > div {
+            flex: 1; /*grow*/
+        }
+
+    .container-bottom {
+        display: flex;
+    }
+
+    .container-bottom > div {
+        flex: 1; /*grow*/
+    }
+
+</style>
+
+<h3>Participant Details</h3>
+
+@{
+    foreach (var mod in Model)
+    {
+
+        <div class="container-top">
+            <div class="text-center"><label class="col-md-2 control-label" style="padding-right: 10px;" for="Participant">FirstName</label></div>
+            <div class="text-center"><label class="col-md-2 control-label" style="padding-right: 10px;" for="Participant">LastName</label></div>
+            <div class="text-center"><label class="col-md-2 control-label" style="padding-right: 10px;" for="Participant">RoomIdBooked</label></div>
+            <div class="text-center"><label class="col-md-2 control-label" style="padding-right: 10px;" for="Participant">BookedARoom</label></div>
+        </div>
+
+        <div class="container-bottom">
+            <div align="center"><textarea class="span2" id="Participant" style="margin: 0px; width: 300px; height: 180px; padding-left: 10px" rows="3" readonly>@Model.First().FirstName</textarea></div>
+            <div align="center"><textarea class="span4" id="Participant" style="margin: 0px; width: 300px; height: 180px; padding-left: 10px" rows="3" readonly>@Model.First().LastName</textarea></div>
+            <div align="center"><textarea class="span6" id="Participant" style="margin: 0px; width: 300px; height: 180px; padding-left: 10px" rows="3" readonly>@Model.First().RoomIdBooked</textarea></div>
+            <div align="center"><textarea class="span8" id="Participant" style="margin: 0px; width: 300px; height: 180px; padding-left: 10px" rows="3" readonly>@Model.First().BookedARoom</textarea></div>
+        </div>
+    }
+}

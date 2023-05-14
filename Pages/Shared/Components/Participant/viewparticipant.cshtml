@@ -1,0 +1,137 @@
+﻿@model IEnumerable<CompassMeetingApp.Models.Participant>
+
+<style>
+    .nfade {
+        display: none;
+    }
+
+
+    .participantlookup td {
+        padding-top: .5em;
+        padding-bottom: .5em;
+    }
+
+</style>
+
+<div class="slider">
+    <table id="participantlookup" class="participantlookup" style="width: 100%; border-spacing:0 2px">
+        <thead>
+            <tr style="background-color:Gainsboro;">
+                <th style="border-radius: 10px 0 0 10px"></th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>RoomIdBooked</th>
+                <th style="border-radius: 0 10px 10px 0">BookedARoom</th>
+                <th style="display:none" class="pl-2">Participant Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var mod in Model)
+                {
+                    <tr style="background-color:#cce6ff">
+                        <td class="partdc" style="border-radius:  10px 0 0 10px"></td>
+                        <td>@mod.FirstName</td>
+                        <td>@mod.LastName</td>
+                        <td>@mod.RoomIdBooked</td>
+                        <td style="border-radius:  0 10px 10px 0">@mod.BookedARoom</td>
+                        <td style="display:none" value="">@mod.Id</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    var part_table = null;
+    var Id = 0;
+
+    $(document).ready(function () {
+
+        defaultSort = [[2, "asc"]];
+
+        part_table = $('#participantlookup').DataTable({
+            "dom": 'Bfrtip',
+            "pageLength": 25,
+            "columns": [
+                {
+                    "class": 'details-control',
+                    "orderable": false,
+                    "defaultContent": ''
+                },
+                { "data": "First Name" },
+                { "data": "Last Name" },
+                { "data": "Room Id Booked" },
+                { "data": "Booked A Room" },
+                { "data": "Participant Id" }
+            ],
+            "order": defaultSort,
+            "language": {
+                "emptyTable": "No engineer information available"
+            },
+            "buttons": [
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: [1]
+
+
+                    },
+                    title: function () { return 'Compass Meeting App (Participant Details)' },
+                }
+            ],
+
+        });
+        $('.nfade').fadeIn(500);
+
+        $('#participantlookup tbody').on('click', 'td.partdc', function () {
+
+            var tr = $(this).closest('tr');
+            var row = part_table.row(tr);
+
+            var td = $(this).next('td');
+            var data = row.data();
+
+            Id = data["Participant Id"];
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.css('background-color', '#cce6ff');
+                tr.removeClass('shown boxentry');
+            }
+            else {
+                part_table.rows().every(function () {
+                    // If row has details expanded
+                    if (this.child.isShown()) {
+                        // Collapse row details
+                        this.child.hide();
+                        $(this.node()).removeClass('shown boxentry');
+                        $(this.node()).css('background-color', '#cce6ff');
+                    }
+                });
+                // Open this row
+                row.child('<p><center>Loading...</center></p>', 'no-padding').show();
+                tr.addClass('shown boxentry');
+                tr.css('background-color', '#FFFAA0');
+                $('div.slider', row.child()).slideDown();
+
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("GetViewParticipantDetails", "Participant")',
+                    data: {
+
+                        id: Id
+                    },
+                    success: function (data) {
+
+                        $('td', row.child()).html(data);
+                        $('div.slider', row.child()).show();
+                    }
+                });
+            }
+        });
+    });
+
+</script>
