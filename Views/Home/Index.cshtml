@@ -1,0 +1,331 @@
+﻿@model CompassMeetingApp.Models.Participant
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<link relb="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type='text/css' />
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+        background-color: #2196F3;
+        padding: 10px;
+    }
+
+    .grid-item {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .column {
+        flex: 50%;
+    }
+
+</style>
+
+<hr/>
+<br/>
+
+<div class="row">
+    <div class="column">
+        <h3>Add a Participant:</h3>
+        <form asp-controller="Table" asp-action="Table">
+            <table>
+                <tr>
+                    <td>FirstName:</td>
+                    <td><input name="txtfirstname" type="text" /></td>
+                </tr>
+                <tr>
+                    <td>LastName:</td>
+                    <td><input name="txtlastname" type="text" /></td>
+                </tr>
+                <tr>
+                    <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="column">
+        <h3>Add a Meeting Room:</h3>
+
+        <form asp-controller="Table" asp-action="Table">
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td><input name="txtfirstname" type="text" /></td>
+                </tr>
+                <tr>
+                    <td>Location:</td>
+                    <td><input name="txtlastname" type="text" /></td>
+                </tr>
+                <tr>
+                    <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<br/>
+<hr/>
+
+<h3>Book a Meeting Room:</h3>
+
+<form asp-controller="Table" asp-action="Table">
+    <table>
+        <tr>
+            <td>LastName:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select multiple="multiple" class="chose-participant form-control"></select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Meeting Room:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select multiple="multiple" class="chose-meetingroom form-control"></select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
+        </tr>
+    </table>
+</form>
+
+<br/>
+<hr/>
+<br/>
+
+<h1>Meeting Room Booking</h1>
+
+<div class="slider">
+    <div class="col-sm">
+        <div class="form-group">
+            <div id="HeaderParticipantLookup" class="pb-2 pl-0">
+                <div style="border-color:dimgrey;border-style:solid;border-width:thin" class="shadow">
+                    <div id="UnloadedSlideParticipantLookup" class="headerparticipantlookup" style="cursor:pointer;background-color:#f9fdfd">
+                        <span><label class="mt-2 ml-2">Participant Lookup</label><i id="updownunloadedparticipantlookup" class="fa fa-chevron-down mr-1 small mt-2" aria-hidden="true" style="float:right;text-align:center;vertical-align:bottom"></i></span>
+                    </div>
+                    <div id="GetParticipantLookup" class="content mt-1 mr-1" style="display:none">
+                        <div class="pl-1">
+                            <br />
+                            <div id="ParticipantLookup" class="form-group pb-2">
+                                @*@await Component.InvokeAsync("", new { Typeof = "" })*@
+                            </div>
+                            <br />
+                            <div id="loadingpcs" class="container pb-2" style="display:none">
+
+                                <div class="spinner-border text-info"></div>
+                                <span class="visually-hidden">Loading SQL Lite data...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm">
+        <div class="form-group">
+            <div id="HeaderMeetingroomLookup" class="pb-2 pl-0">
+                <div style="border-color:dimgrey;border-style:solid;border-width:thin" class="shadow">
+                    <div id="UnloadedSlidemeetingroomLookup" class="headermeetingroomlookup" style="cursor:pointer;background-color:#f9fdfd">
+                        <span><label class="mt-2 ml-2">Meetingroom Lookup</label><i id="updownunloadedmeetingroomlookup" class="fa fa-chevron-down mr-1 small mt-2" aria-hidden="true" style="float:right;text-align:center;vertical-align:bottom"></i></span>
+                    </div>
+                    <div id="GetMeetingroomLookup" class="content mt-1 mr-1" style="display:none">
+                        <div class="pl-1">
+                            <div id="meetingroomLookup" class="form-group pb-2">
+                                @*@await Component.InvokeAsync("", new { Typeof = "" })*@
+                            </div>
+                            <div id="loadingmee" class="container pb-2" style="display:none">
+
+                                <div class="spinner-border text-info"></div>
+                                <span class="visually-hidden">Loading SQL Lite data...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+
+@{
+
+
+        <div class="grid-container">
+            <div class="grid-item">Time</div>           <div class="grid-item">Mon</div>                                                                <div class="grid-item">Tue</div>                                                                <div class="grid-item">Wed</div>                                                                <div class="grid-item">Thu</div>                                                                <div class="grid-item">Fri</div>                                                                 <div class="grid-item">Sat</div>                                                                   <div class="grid-item">Sun</div>
+
+            <div class="grid-item">09:00-10:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot1" name="monSlot1" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot1" name="tueSlot1" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot1" name="wedSlot1" value="" /></div>   <div class="grid-item"><input type="checkbox" id="thuSlot1" name="thuSlot1" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot1" name="friSlot1" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot1" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+            <div class="grid-item">10:00-11:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot2" name="monSlot2" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot2" name="tueSlot2" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot2" name="wedSlot2" value="" /></div>   <div class="grid-item"><input type="checkbox" id="thuSlot2" name="thuSlot2" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot2" name="friSlot2" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot2" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+            <div class="grid-item">11:00-12:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot3" name="monSlot3" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot3" name="tueSlot3" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot3" name="wedSlot3" value="" /></div>   <div class="grid-item"><input type="checkbox" id="thuSlot3" name="thuSlot3" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot3" name="friSlot3" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot3" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+            <div class="grid-item">13:00-14:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot4" name="monSlot4" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot4" name="tueSlot4" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot4" name="wedSlot4" value="" /></div>   <div class="grid-item"><input type="checkbox" id="thuSlot4" name="thuSlot4" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot4" name="friSlot4" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot4" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+            <div class="grid-item">15:00-16:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot5" name="monSlot5" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot5" name="tueSlot5" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot5" name="wedSlot5" value="" /></div>   <div class="grid-item"><input type="checkbox" id="thuSlot5" name="thuSlot5" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot5" name="friSlot5" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot5" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+            <div class="grid-item">16:00-17:00</div>    <div class="grid-item"><input type="checkbox" id="monSlot6" name="monSlot6" value="" /></div>   <div class="grid-item"><input type="checkbox" id="tueSlot6" name="tueSlot6" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot6" name="wedSlot6" value="" /></div>   <div class="grid-item"><input type="checkbox" id="wedSlot6" name="thuSlot6" value="" /></div>   <div class="grid-item"><input type="checkbox" id="friSlot6" name="friSlot6" value="" /></div>    <div class="grid-item"><input type="checkbox" id="satSlot6" name="satSlot1" value="" /></div>      <div class="grid-item"><input type="checkbox" id="sunSlot1" name="sunSlot1" value="" /></div>
+        </div>
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $(".headerparticipantlookup").click(function () {
+
+            $header = $(this);
+            var currelem = this.id;
+            var upd = "";
+            switch (currelem) {
+                case 'UnloadedSlideParticipantLookup':
+                    upd = "updownunloadedparticipantlookup"
+                    break;
+            }
+
+            //getting the next element
+            $content = $header.next();
+            //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+            $content.slideToggle(500, function () {
+                //execute this after slideToggle is done
+                //change text of header based on visibility of content div
+                $header.text(function () {
+                    //change text based on condition
+                    if ($content.is(":visible")) {
+
+                        document.getElementById("loadingpcs").style.display = "block";
+
+                        GetParticipantLookup();
+
+                        var element = document.getElementById(upd);
+                        element.classList.remove("fa-chevron-down");
+                        element.classList.add("fa-chevron-up");
+                    }
+                    else {
+                        var element = document.getElementById(upd);
+                        element.classList.remove("fa-chevron-up");
+                        element.classList.add("fa-chevron-down");
+                    }
+                });
+            });
+
+        });
+
+        $(".headermeetingroomlookup").click(function () {
+
+            $header = $(this);
+            var currelem = this.id;
+            var upd = "";
+            switch (currelem) {
+                case 'UnloadedSlideMeetingroomLookup':
+                    upd = "updownunloadedmeetingroomlookup"
+                    break;
+            }
+
+            //getting the next element
+            $content = $header.next();
+            //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+            $content.slideToggle(500, function () {
+                //execute this after slideToggle is done
+                //change text of header based on visibility of content div
+                $header.text(function () {
+                    //change text based on condition
+                    if ($content.is(":visible")) {
+
+                        document.getElementById("loadingmee").style.display = "block";
+
+                        GetMeetingroomLookup();
+
+                        var element = document.getElementById(upd);
+                        element.classList.remove("fa-chevron-down");
+                        element.classList.add("fa-chevron-up");
+                    }
+                    else {
+                        var element = document.getElementById(upd);
+                        element.classList.remove("fa-chevron-up");
+                        element.classList.add("fa-chevron-down");
+                    }
+                });
+            });
+
+        });
+    });
+
+    function GetParticipantLookup() {
+
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("Index", "Participants")',
+            data: {
+
+            },
+            success: function (data) {
+
+                $('#ParticipantLookup').html(data);
+                document.getElementById("loadingpcs").style.display = "none";
+            }
+        });
+    };
+
+    function GetMeetingroomLookup() {
+
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("Index", "Meetingrooms")',
+            data: {
+
+            },
+            success: function (data) {
+
+                $('#MeetingroomLookup').html(data);
+                document.getElementById("loadingmee").style.display = "none";
+            }
+        });
+    };
+
+    $(".chose-participant").select2({
+        ajax: {
+            url: '/Home/GetEmployeeList',
+            width: 'resolve',
+            data: function (params) {
+                return {
+                    q: params.term// search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.items
+                };
+            },
+            minimumInputLength: 2,
+            width: 'resolve'
+        }
+    });
+
+</script>
