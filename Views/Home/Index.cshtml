@@ -44,83 +44,6 @@
 <hr/>
 <br/>
 
-<div class="row">
-    <div class="column">
-        <h3>Add a Participant:</h3>
-        <form asp-controller="Table" asp-action="Table">
-            <table>
-                <tr>
-                    <td>FirstName:</td>
-                    <td><input name="txtfirstname" type="text" /></td>
-                </tr>
-                <tr>
-                    <td>LastName:</td>
-                    <td><input name="txtlastname" type="text" /></td>
-                </tr>
-                <tr>
-                    <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-    <div class="column">
-        <h3>Add a Meeting Room:</h3>
-
-        <form asp-controller="Table" asp-action="Table">
-            <table>
-                <tr>
-                    <td>Name:</td>
-                    <td><input name="txtfirstname" type="text" /></td>
-                </tr>
-                <tr>
-                    <td>Location:</td>
-                    <td><input name="txtlastname" type="text" /></td>
-                </tr>
-                <tr>
-                    <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
-
-<br/>
-<hr/>
-
-<h3>Book a Meeting Room:</h3>
-
-<form asp-controller="Table" asp-action="Table">
-    <table>
-        <tr>
-            <td>LastName:</td>
-            <td>
-                <div class="container">
-                    <div class="form-group">
-                        <select multiple="multiple" class="chose-participant form-control"></select>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Meeting Room:</td>
-            <td>
-                <div class="container">
-                    <div class="form-group">
-                        <select multiple="multiple" class="chose-meetingroom form-control"></select>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
-        </tr>
-    </table>
-</form>
-
-<br/>
-<hr/>
-<br/>
-
 <h1>Meeting Room Booking</h1>
 
 <div class="slider">
@@ -176,7 +99,41 @@
 </div>
 
 <hr/>
+<br/>
 
+<h3>Book a Meeting Room:</h3>
+
+<form asp-controller="Table" asp-action="Table">
+    <table>
+        <tr>
+            <td>LastName:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select multiple="multiple" class="chose-participant form-control"></select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Meeting Room:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select multiple="multiple" class="chose-meetingroom form-control"></select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
+        </tr>
+    </table>
+</form>
+
+<br/>
+<hr/>
+<br/>
 
 @{
 
