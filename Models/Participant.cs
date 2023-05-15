@@ -11,8 +11,8 @@ namespace CompassMeetingApp.Models
         [BindProperty]
         public string LastName { get; set; } = string.Empty;
         [BindProperty]
-        public int RoomIdBooked { get; set; } = 0;
+        public int? RoomIdBooked { get; set; } = 0;
         [BindProperty]
-        public bool BookedARoom { get; set; } = false;
+        public bool? BookedARoom { get; set; } = false;
     }
 }

@@ -18,9 +18,9 @@ namespace CompassMeetingApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
-                    DayBooked = table.Column<string>(type: "TEXT", nullable: false),
-                    TimeBooked = table.Column<string>(type: "TEXT", nullable: false),
-                    isBooked = table.Column<bool>(type: "INTEGER", nullable: false)
+                    DayBooked = table.Column<string>(type: "TEXT", nullable: true),
+                    TimeBooked = table.Column<string>(type: "TEXT", nullable: true),
+                    isBooked = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,8 +35,8 @@ namespace CompassMeetingApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    RoomIdBooked = table.Column<int>(type: "INTEGER", nullable: false),
-                    BookedARoom = table.Column<bool>(type: "INTEGER", nullable: false)
+                    RoomIdBooked = table.Column<int>(type: "INTEGER", nullable: true),
+                    BookedARoom = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {

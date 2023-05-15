@@ -90,8 +90,8 @@ namespace CompassMeetingApp.Controllers
                             NewParticipant.Id = Convert.ToInt32(reader["Id"]);
                             NewParticipant.FirstName = Convert.ToString(reader["FirstName"]);
                             NewParticipant.LastName = Convert.ToString(reader["LastName"]);
-                            NewParticipant.RoomIdBooked = Convert.ToInt32(reader["RoomIdBooked"]);
-                            NewParticipant.BookedARoom = Convert.ToBoolean(reader["BookedARoom"]);
+                            NewParticipant.RoomIdBooked = Convert.ToInt32(reader["RoomIdBooked"] as int?);
+                            NewParticipant.BookedARoom = Convert.ToBoolean(reader["BookedARoom"] as bool?);
 
                             Participants.Add(NewParticipant);
                         }

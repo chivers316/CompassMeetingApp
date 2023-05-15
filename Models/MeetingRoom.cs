@@ -15,6 +15,6 @@ namespace CompassMeetingApp.Models
         [BindProperty] 
         public string? TimeBooked { get; set; } = string.Empty;
         [BindProperty] 
-        public bool isBooked { get; set; } = false;
+        public bool? isBooked { get; set; } = false;
     }
 }
