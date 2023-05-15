@@ -78,14 +78,16 @@
             <div id="HeaderMeetingroomLookup" class="pb-2 pl-0">
                 <div style="border-color:dimgrey;border-style:solid;border-width:thin" class="shadow">
                     <div id="UnloadedSlideMeetingroomLookup" class="headermeetingroomlookup" style="cursor:pointer;background-color:#f9fdfd">
-                        <span><label class="mt-2 ml-2">Meetingroom Lookup</label><i id="updownunloadedmeetingroomlookup" class="fa fa-chevron-down mr-1 small mt-2" aria-hidden="true" style="float:right;text-align:center;vertical-align:bottom"></i></span>
+                        <span><label class="mt-2 ml-2">Meeting Room Lookup</label><i id="updownunloadedmeetingroomlookup" class="fa fa-chevron-down mr-1 small mt-2" aria-hidden="true" style="float:right;text-align:center;vertical-align:bottom"></i></span>
                     </div>
                     <div id="GetMeetingroomLookup" class="content mt-1 mr-1" style="display:none">
                         <div class="pl-1">
-                            <div id="meetingroomLookup" class="form-group pb-2">
+                            <br />
+                            <div id="MeetingroomLookup" class="form-group pb-2">
                                 @*@await Component.InvokeAsync("", new { Typeof = "" })*@
                             </div>
-                            <div id="loadingmee" class="container pb-2" style="display:none">
+                            <br />
+                            <div id="loadingmeet" class="container pb-2" style="display:none">
 
                                 <div class="spinner-border text-info"></div>
                                 <span class="visually-hidden">Loading SQL Lite data...</span>
@@ -96,6 +98,8 @@
             </div>
         </div>
     </div>
+
+
 </div>
 
 <hr />
@@ -125,6 +129,48 @@
                 </div>
             </td>
         </tr>
+
+        <tr>
+            <td>Day:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select data-val="true" data-val-required="The DayOfWeek field is required." id="DayOfWeek" name="DayOfWeek">
+                            <option value="">Pick one</option>
+                            <option selected="selected" value="0">Sunday</option>
+                            <option value="1">Monday</option>
+                            <option value="2">Tuesday</option>
+                            <option value="3">Wednesday</option>
+                            <option value="4">Thursday</option>
+                            <option value="5">Friday</option>
+                            <option value="6">Saturday</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Time Slot:</td>
+            <td>
+                <div class="container">
+                    <div class="form-group">
+                        <select data-val="true" data-val-required="The Time Slot field is required." id="TimeSlot" name="TimeSlot">
+                            <option value="">Pick one</option>
+                            <option selected="selected" value="0">09:00-10:00</option>
+                            <option value="1">10:00-11:00</option>
+                            <option value="2">11:00-12:00</option>
+                            <option value="3">12:00-13:00</option>
+                            <option value="4">13:00-14:00</option>
+                            <option value="5">14:00-15:00</option>
+                            <option value="6">15:00-16:00</option>
+                            <option value="7">16:00-17:00</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
         <tr>
             <td><input class="btn btn-primary" id="Submit1" type="submit" value="submit" /></td>
         </tr>
@@ -215,7 +261,7 @@
                     //change text based on condition
                     if ($content.is(":visible")) {
 
-                        document.getElementById("loadingmee").style.display = "block";
+                        document.getElementById("loadingmeet").style.display = "block";
 
                         GetMeetingroomLookup();
 
@@ -268,7 +314,26 @@
 
     $(".chose-participant").select2({
         ajax: {
-            url: '/Home/GetParticipants',
+            url: '/Home/GetParticipantsList',
+            width: 'resolve',
+            data: function (params) {
+                return {
+                    q: params.term// search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.items
+                };
+            },
+            minimumInputLength: 2,
+            width: 'resolve'
+        }
+    });
+
+    $(".chose-meetingroom").select2({
+        ajax: {
+            url: '/Home/GetMeetingroomsList',
             width: 'resolve',
             data: function (params) {
                 return {

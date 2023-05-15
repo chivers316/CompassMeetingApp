@@ -14,5 +14,11 @@ namespace CompassMeetingApp.Models
         public int? RoomIdBooked { get; set; } = 0;
         [BindProperty]
         public bool? BookedARoom { get; set; } = false;
+
+
+        public List<SelectListItem> Status { set; get; }
+
+        public int? SelectedStatus { set; get; }
+
     }
 }

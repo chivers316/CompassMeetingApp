@@ -1,5 +1,6 @@
 ﻿using CompassMeetingApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.Sqlite;
 using System.Diagnostics;
 using System.Net;
@@ -97,7 +98,7 @@ namespace CompassMeetingApp.Controllers
                         }
                     }
                 }
-                return Participants;
+                return Participants.ToList();
             }
             catch (Exception e)
             {
@@ -106,6 +107,59 @@ namespace CompassMeetingApp.Controllers
             }
         }
 
+        public ActionResult GetParticipantList(string q)
+        {
+            List<Participant> Participants = new List<Participant>();
+            string sql = "";
+            try
+            {
+                sql = "SELECT Id, FirstName, LastName, RoomIdBooked, BookedARoom From Participants";
 
+                using (SqliteConnection con = new SqliteConnection("Data Source=sqlite.db"))
+                {
+                    using (SqliteCommand cmd = new SqliteCommand(sql, con))
+                    {
+                        con.Open();
+                        SqliteDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            Participant NewParticipant = new Participant();
+                            NewParticipant.Id = Convert.ToInt32(reader["Id"]);
+                            NewParticipant.FirstName = Convert.ToString(reader["FirstName"]);
+                            NewParticipant.LastName = Convert.ToString(reader["LastName"]);
+                            NewParticipant.RoomIdBooked = Convert.ToInt32(reader["RoomIdBooked"] as int?);
+                            NewParticipant.BookedARoom = Convert.ToBoolean(reader["BookedARoom"] as bool?);
+
+                            Participants.Add(NewParticipant);
+                        }
+                    }
+                }
+                
+                var list = Participants;
+
+                if (!(string.IsNullOrEmpty(q) || string.IsNullOrWhiteSpace(q)))
+                {
+                    list = list.Where(x => x.LastName.ToLower().StartsWith(q.ToLower())).ToList();
+                }
+                return Json(new { items = list }, "...SELECT...");
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                return null;
+            }
+        }
+
+        public ActionResult RMA(int Id)
+        {
+            Participant model = new Participant();
+
+            model.Status = new SelectList(model.Status, "ID",
+            "Status").ToList();
+            //some an other stuff
+
+            return View(model);
+        }
     }
 }
